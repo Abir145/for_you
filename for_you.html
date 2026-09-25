@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You - Special Edition</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #fdfbfb;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* Floating Emojis Container */
+        #particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .emoji-particle {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            animation: floatUp linear forwards;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.9));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Artistic Hey */
+        .artistic-hey {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #d946ef, #ff758c);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 4px 15px rgba(217, 70, 239, 0.4);
+            animation: shine 3s linear infinite, gentle-sway 4s ease-in-out infinite;
+            display: inline-block;
+            line-height: 1.2;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        @keyframes gentle-sway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        /* Glowing Text for Step 2 */
+        .glowing-text {
+            color: #d946ef;
+            text-shadow: 0 0 10px rgba(217, 70, 239, 0.4), 
+                         0 0 20px rgba(217, 70, 239, 0.3),
+                         0 0 30px rgba(217, 70, 239, 0.2);
+            animation: pulse-glow 2.5s infinite alternate;
+            font-family: 'Pacifico', cursive;
+            line-height: 1.6;
+        }
+
+        @keyframes pulse-glow {
+            from {
+                text-shadow: 0 0 10px rgba(217, 70, 239, 0.5), 
+                             0 0 20px rgba(217, 70, 239, 0.3);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(217, 70, 239, 0.8), 
+                             0 0 35px rgba(217, 70, 239, 0.6),
+                             0 0 50px rgba(217, 70, 239, 0.4);
+            }
+        }
+
+        /* Highlighted Text for Step 3 */
+        .highlighted-text {
+            color: #e11d48; /* Vibrant Rose Color */
+            text-shadow: 0 0 12px rgba(225, 29, 72, 0.4), 
+                         0 0 24px rgba(225, 29, 72, 0.2);
+            animation: soft-pulse 3s infinite alternate;
+        }
+
+        @keyframes soft-pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.02); }
+        }
+
+        /* View Transitions */
+        .view-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(25px) scale(0.98);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        .view-container.fade-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Custom Scrollbar for long text */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(244, 114, 182, 0.7); /* Pink 400 with opacity */
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(244, 114, 182, 1); 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 text-gray-800">
+
+    <!-- Backgrounds -->
+    <div class="bg-animated"></div>
+    <div id="particle-container"></div>
+
+    <main class="glass-card w-full max-w-3xl rounded-[2rem] p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-2xl">
+        
+        <!-- VIEW 1: Heartfelt Message -->
+        <div id="view1" class="view-container active fade-in">
+            <div class="max-h-[55vh] overflow-y-auto custom-scrollbar pr-4 space-y-6 text-base sm:text-lg md:text-xl leading-relaxed text-gray-800 font-medium tracking-wide">
+                <div class="text-center w-full">
+                    <h1 class="artistic-hey">Hey, Kuchipudi 😊😊!!</h1>
+                </div>
+                <p>
+                    Seems like, you are going through a very tough time 😢😢. You cannot hide from me. From your message replies to not picking up calls, it tells the whole story that you are not doing good. You take your time - no rush. But I can't help thinking of you 🥹. It bothers me always. From the day one till today I always have a feeling for you. May be that's the reason I can understand whenever you are sad.
+                </p>
+                <p>
+                    I know that I have done so many things which had hurt you in past - I've been rude, may be not talking to you for quite a long time - I know all these. Trust me, while I was not talking to you or while I was behaving rude - I got hurt as well (may be more than anything). May be I'm the most boring person , may be I 'm the most possessive person and may be I'm the person who overthinks a lot and may be that's why I'm writing this again. But trust me, at the same time, I'm the same person who can care for only you and nobody else, who can spend a whole day just looking at your pictures, going through the chats we had. 
+                </p>
+                <p>
+                    The way I talk to you and I share all my feelings and everything - I have never felt with anyone (not only girls, with anyone else). The reason behind all these is always YOU. You are such a great friend, soulmate, partner, person who has always helped me to feel what I feel for you.
+                </p>
+                <p>
+                    I know that something is bothering you from yesterday. It can be related to job, it can be family, it can be related to you ex, it can be related your friend or it can be nothing (sometimes I feel that without any reason I'm sad) and it's completely okay. You have no need to explain me or explain anyone. Whenever you feel its comfortable then only you can share . Apart from all these, if your sadness is because of me, please let me once you feel comfortable. But take your time.
+                </p>
+            </div>
+            
+            <div class="mt-8 flex justify-center pt-6 border-t border-white/40">
+                <button onclick="goToView(2)" class="bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-pink-300 w-full sm:w-auto text-lg">
+                    Abir has something for you - wanna see what it is !!
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 2: Stay Tuned -->
+        <div id="view2" class="view-container text-center py-10 md:py-16">
+            <h2 class="glowing-text text-3xl sm:text-4xl md:text-5xl mb-14 px-2">
+                Stay Tuned! Everything is not going to be digital. Some small kutuputuus will be here at your place shortly 🎁
+            </h2>
+            
+            <div class="flex justify-center mt-12">
+                <button onclick="goToView(3)" class="bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-teal-300 w-full sm:w-auto text-lg">
+                    Click Here once you receive the small kutuputuus 🍫
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 3: Final Message -->
+        <div id="view3" class="view-container text-center py-8 md:py-12 px-2 sm:px-6">
+            <p class="text-xl sm:text-2xl md:text-3xl text-gray-800 font-semibold leading-relaxed mb-10 opacity-90">
+                Not sure if it made you feel a little better or not. I'll keep on trying. I shall not & cannot give up on you.
+            </p>
+            
+            <!-- Highlighted Last Line Box -->
+            <div class="mt-8 p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/50 shadow-[inset_0_0_20px_rgba(255,255,255,0.5)] transform transition-all duration-700 hover:scale-105">
+                <p class="highlighted-text text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-snug">
+                    "You are my last hope for everything including life." <span class="inline-block animate-bounce mt-2 sm:mt-0">💖</span>
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Define specific emojis for each step
+        const emojisView1 = ['😢', '😔', '🥺', '💔'];
+        const emojisView2 = ['🍫', '🍬', '💝', '✨'];
+        const emojisView3 = ['🧸', '🫂', '❤️', '🥰'];
+
+        let currentEmojis = emojisView1;
+        let particleInterval;
+
+        /**
+         * Creates and animates a single floating emoji particle
+         */
+        function spawnParticle() {
+            const container = document.getElementById('particle-container');
+            const particle = document.createElement('div');
+            
+            const randomEmoji = currentEmojis[Math.floor(Math.random() * currentEmojis.length)];
+            particle.innerText = randomEmoji;
+            particle.className = 'emoji-particle';
+            
+            const startPosX = Math.random() * 100; // 0 to 100 vw
+            const duration = 6 + Math.random() * 8; // 6s to 14s for gentle floating
+            const size = 1.5 + Math.random() * 2.5; // 1.5rem to 4rem
+
+            particle.style.left = `${startPosX}vw`;
+            particle.style.fontSize = `${size}rem`;
+            particle.style.animationDuration = `${duration}s`;
+
+            container.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        /**
+         * Starts the continuous particle generator
+         */
+        function startParticleSystem() {
+            if (particleInterval) clearInterval(particleInterval);
+            
+            // Initial burst
+            for(let i=0; i<6; i++) {
+                setTimeout(spawnParticle, i * 400);
+            }
+
+            // Steady stream
+            particleInterval = setInterval(spawnParticle, 900);
+        }
+
+        /**
+         * Clears all current particles instantly during view changes
+         */
+        function clearParticles() {
+            const container = document.getElementById('particle-container');
+            container.innerHTML = '';
+        }
+
+        /**
+         * Transitions smoothly between the 3 views
+         */
+        function goToView(viewNumber) {
+            const views = [
+                document.getElementById('view1'),
+                document.getElementById('view2'),
+                document.getElementById('view3')
+            ];
+
+            // Update emoji set
+            if (viewNumber === 1) currentEmojis = emojisView1;
+            if (viewNumber === 2) currentEmojis = emojisView2;
+            if (viewNumber === 3) currentEmojis = emojisView3;
+
+            // Refresh environment
+            clearParticles();
+            startParticleSystem();
+
+            // Fade out current views
+            views.forEach(view => {
+                view.classList.remove('fade-in');
+                setTimeout(() => {
+                    view.classList.remove('active');
+                }, 500); 
+            });
+
+            // Fade in target view
+            setTimeout(() => {
+                const targetView = document.getElementById(`view${viewNumber}`);
+                targetView.classList.add('active');
+                // Tiny timeout to ensure DOM registers display:block before opacity kicks in
+                setTimeout(() => {
+                    targetView.classList.add('fade-in');
+                }, 50);
+            }, 500);
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            startParticleSystem();
+        };
+    </script>
+</body>
+</html>
